@@ -1,29 +1,28 @@
+import axios from "axios";
 import styles from "../../styles/FoodItem.module.css";
 import Image from "next/image";
 import { useState } from "react";
 
-const FoodItem = () => {
+const FoodItem = ({ item }) => {
   const [size, setSize] = useState(0);
-
-  const item = {
-    id: 1,
-    img: "/img/pizza.jpeg",
-    name: "Sicilian Pizza",
-    price: [17.5, 18.6, 19.9],
-    desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-  };
+  const [qty, setQty] = useState(1);
 
   return (
     <div className={styles.container}>
       <div className={styles.left}>
         <div className={styles.imgContainer}>
-          <Image src={item.img} alt="pizza" layout="fill" objectFit="contain" />
+          <Image
+            src={item.image}
+            alt="pizza"
+            layout="fill"
+            objectFit="contain"
+          />
         </div>
       </div>
       <div className={styles.right}>
-        <h1 className={styles.title}>{item.name}</h1>
-        <span className={styles.price}>${item.price[size]}</span>
-        <p className={styles.desc}>{item.desc}</p>
+        <h1 className={styles.title}>{item.title}</h1>
+        <span className={styles.price}>${item.prices[size]}</span>
+        <p className={styles.desc}>{item.description}</p>
         <h3 className={styles.choice}>Choose your size, please !</h3>
         <div className={styles.sizes}>
           <div className={styles.size} onClick={() => setSize(0)}>
@@ -46,12 +45,25 @@ const FoodItem = () => {
             min={1}
             max={20}
             className={styles.quantity}
+            onChange={(e) => setQty(e.target.value)}
           />
           <button className={styles.button}>Submit</button>
         </div>
       </div>
     </div>
   );
+};
+
+export const getServerSideProps = async ({ params }) => {
+  const res = await axios.get(
+    `http://localhost:3000/api/products/${params.id}`
+  );
+
+  return {
+    props: {
+      item: res.data,
+    },
+  };
 };
 
 export default FoodItem;

@@ -1,8 +1,9 @@
 import styles from "../../styles/Order.module.css";
 import Image from "next/image";
+import axios from "axios";
 
-const Order = () => {
-  const status = 0;
+const Order = ({ order }) => {
+  const status = order.status;
 
   const statusClass = (index) => {
     if (index - status < 1) return styles.done;
@@ -26,16 +27,16 @@ const Order = () => {
             <tbody>
               <tr>
                 <td>
-                  <span className={styles.id}>123654786</span>
+                  <span className={styles.id}>{order._id}</span>
                 </td>
                 <td>
-                  <span className={styles.customer}>John Doe</span>
+                  <span className={styles.customer}>{order.customer}</span>
                 </td>
                 <td>
-                  <span className={styles.address}>677 Fire Access Road</span>
+                  <span className={styles.address}>{order.address}</span>
                 </td>
                 <td>
-                  <span className={styles.total}>$19.9</span>
+                  <span className={styles.total}>${order.total}</span>
                 </td>
               </tr>
             </tbody>
@@ -113,7 +114,7 @@ const Order = () => {
             <b className={styles.totalTitleText}>Discount:</b>$0.0
           </div>
           <div className={styles.totalTitle}>
-            <b className={styles.totalTitleText}>Total:</b>$19.9
+            <b className={styles.totalTitleText}>Total:</b>${order.total}
           </div>
           <button className={styles.button} disabled>
             Paid
@@ -122,6 +123,16 @@ const Order = () => {
       </div>
     </div>
   );
+};
+
+export const getServerSideProps = async ({ params }) => {
+  const res = await axios.get(`http://localhost:3000/api/orders/${params.id}`);
+
+  return {
+    props: {
+      order: res.data,
+    },
+  };
 };
 
 export default Order;

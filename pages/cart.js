@@ -1,11 +1,29 @@
 import styles from "../styles/Cart.module.css";
 import Image from "next/image";
+import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import OrderModal from "../components/OrderModal";
+import { useRouter } from "next/router";
+import axios from "axios";
+import { reset } from "../redux/cartSlice";
 
 const Cart = () => {
+  const [cash, setCash] = useState(false);
   const cart = useSelector((store) => store.cart);
   const dispatch = useDispatch();
-  console.log(cart);
+  const router = useRouter();
+
+  const createOrder = async (data) => {
+    try {
+      const res = await axios.post("http://localhost:3000/api/orders", data);
+      if (res.status === 201) {
+        dispatch(reset());
+        router.push(`/orders/${res.data._id}`);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className={styles.container}>
@@ -55,16 +73,18 @@ const Cart = () => {
       <div className={styles.right}>
         <div className={styles.wrapper}>
           <h2 className={styles.title}>Cart Total</h2>
-
           <div className={styles.totalTitle}>
             <b className={styles.totalTitleText}>Discount:</b>$0.0
           </div>
           <div className={styles.totalTitle}>
             <b className={styles.totalTitleText}>Total:</b>${cart.total}
           </div>
-          <button className={styles.button}>Submit</button>
+          <button className={styles.button} onClick={() => setCash(true)}>
+            Order Now !
+          </button>
         </div>
       </div>
+      {cash && <OrderModal total={cart.total} createOrder={createOrder} />}
     </div>
   );
 };

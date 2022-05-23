@@ -15,7 +15,6 @@ const ProductList = ({ pizzaList }) => {
         {pizzaList.map((pizza) => (
           <Product key={pizza._id} pizza={pizza} />
         ))}
-        ;
       </div>
     </div>
   );

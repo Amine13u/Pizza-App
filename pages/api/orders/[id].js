@@ -20,19 +20,15 @@ export default async function handler(req, res) {
 
   if (method === "PUT") {
     try {
-      const product = await Product.create(req.body);
-      res.status(201).json(product);
+      const order = await Order.findByIdAndUpdate(id, req.body, {
+        new: true,
+      });
+      res.status(201).json(order);
     } catch (error) {
       res.status(500).json(error);
     }
   }
 
   if (method === "DELETE") {
-    try {
-      const product = await Product.create(req.body);
-      res.status(201).json(product);
-    } catch (error) {
-      res.status(500).json(error);
-    }
   }
 }

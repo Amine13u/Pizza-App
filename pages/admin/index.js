@@ -30,10 +30,10 @@ const Index = ({ orders, products }) => {
         });
 
         setOrderList([
-          res.data,
-          ...orderList.filter((order) => order._id !== id),
+          ...orderList.map((order) =>
+            order._id === id ? { ...order, status: currentStatus + 1 } : order
+          ),
         ]);
-        console.log(orderList);
       }
     } catch (error) {
       console.error(error);
@@ -116,7 +116,18 @@ const Index = ({ orders, products }) => {
   );
 };
 
-export const getServerSideProps = async () => {
+export const getServerSideProps = async (ctx) => {
+  const myCookie = ctx.req?.cookies || "";
+
+  if (myCookie.token !== process.env.TOKEN) {
+    return {
+      redirect: {
+        destination: "/admin/login",
+        permanent: false,
+      },
+    };
+  }
+
   const productRes = await axios.get("http://localhost:3000/api/products");
   const orderRes = await axios.get("http://localhost:3000/api/orders");
 

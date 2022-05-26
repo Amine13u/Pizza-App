@@ -15,7 +15,7 @@ const Slider = () => {
     }
   };
 
-  const images = ["/img/chiken.jpeg", "/img/pasta.jpeg", "/img/pizza.jpeg"];
+  const images = ["/img/pizza1.jpg", "/img/pizza3.jpg", "/img/pizza2.jpg"];
 
   return (
     <div className={styles.container}>

@@ -2,11 +2,13 @@ import styles from "../../styles/Admin.module.css";
 import Image from "next/image";
 import axios from "axios";
 import { useState } from "react";
+import { useRouter } from "next/router";
 
 const Index = ({ orders, products }) => {
   const [pizzaList, setPizzaList] = useState(products);
   const [orderList, setOrderList] = useState(orders);
   const status = ["Preparing", "On Delivery", "Delivered"];
+  const router = useRouter();
 
   const handeleDelete = async (id) => {
     try {
@@ -34,6 +36,7 @@ const Index = ({ orders, products }) => {
             order._id === id ? { ...order, status: currentStatus + 1 } : order
           ),
         ]);
+        router.push(`/orders/${id}`);
       }
     } catch (error) {
       console.error(error);
@@ -70,7 +73,6 @@ const Index = ({ orders, products }) => {
                 <td>{product.title}</td>
                 <td>${product.prices[0]}</td>
                 <td>
-                  <button className={styles.button}>Edit</button>
                   <button
                     className={styles.button}
                     onClick={() => handeleDelete(product._id)}

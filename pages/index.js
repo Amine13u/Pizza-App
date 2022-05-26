@@ -1,6 +1,5 @@
 import axios from "axios";
 import Head from "next/head";
-import Image from "next/image";
 import { useState } from "react";
 import AddButton from "../components/AddButton";
 import Add from "../components/Add";
